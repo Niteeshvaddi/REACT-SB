@@ -11,6 +11,7 @@ import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import Dashboard from './pages/Dashboard'
 import DashboardLayout from './layouts/DashboardLayout'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -25,9 +26,11 @@ function App() {
           element={<ForgotPassword />}
         />
 
+        {/*<Route element={<ProtectedRoute />}>*/}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
         </Route>
+        {/*</Route>*/}
 
         <Route
           path="*"

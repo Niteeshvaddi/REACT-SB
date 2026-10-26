@@ -5,11 +5,36 @@ import { Link } from 'react-router-dom'
 function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    setMessage(`Reset instructions requested for ${email}`)
+    setMessage('')
+    setError('')
+
+    const trimmedEmail = email.trim()
+
+    if (!trimmedEmail) {
+      setError('Please enter your email address.')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      // TODO: Replace this simulation with the Spring Boot API request.
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      setMessage(
+        'The backend is not connected yet. Password reset is not available.'
+      )
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -34,11 +59,14 @@ function ForgotPassword() {
 
             <input
               id="email"
+              name="email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value)
                 setMessage('')
+                setError('')
               }}
               placeholder="Enter your registered email"
               required
@@ -46,19 +74,32 @@ function ForgotPassword() {
             />
           </div>
 
+          {error && (
+            <p
+              role="alert"
+              className="rounded-lg bg-red-50 p-3 text-sm text-red-700"
+            >
+              {error}
+            </p>
+          )}
+
+          {message && (
+            <p
+              role="status"
+              className="rounded-lg bg-blue-50 p-3 text-sm text-blue-700"
+            >
+              {message}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
+            disabled={isLoading}
+            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Request Password Reset
+            {isLoading ? 'Please wait...' : 'Request Password Reset'}
           </button>
         </form>
-
-        {message && (
-          <p role="status" className="mt-4 text-center text-sm text-green-600">
-            {message}
-          </p>
-        )}
 
         <p className="mt-6 text-center text-sm text-gray-600">
           Remember your password?{' '}
